@@ -5,10 +5,10 @@ use std::io::{self, BufRead};
 use std::path::Path;
 
 fn main() {
-    let path = "/usr/share/dict/words";
-    let words = read_and_filter_words(path).expect("Failed to read words");
+    let path: &str = "/usr/share/dict/words";
+    let words: Vec<String> = read_and_filter_words(path).expect("Failed to read words");
 
-    let password = generate_password(&words, 3);
+    let password: String = generate_password(&words, 3);
     println!("Generated password: {}", password);
 }
 
@@ -19,7 +19,7 @@ where
     let file = File::open(filename)?;
     let reader = io::BufReader::new(file);
 
-    let words = reader
+    let words: Vec<String> = reader
         .lines()
         .filter_map(Result::ok)
         .filter(|word| word.len() >= 5)
@@ -33,7 +33,7 @@ fn generate_password(word_list: &[String], word_count: usize) -> String {
     let mut password = String::new();
 
     for i in 0..word_count {
-        let word = word_list.choose(&mut rng).unwrap();
+        let word: &String = word_list.choose(&mut rng).unwrap();
         password.push_str(word);
         if i < word_count - 1 {
             password.push_str(" ");
