@@ -1,5 +1,5 @@
 use rand::seq::SliceRandom;
-use rand::thread_rng;
+use rand::{thread_rng, Rng};
 use std::fs::File;
 use std::io::{self, BufRead};
 use std::path::Path;
@@ -36,8 +36,10 @@ fn generate_password(word_list: &[String], word_count: usize) -> String {
         let word: &String = word_list.choose(&mut rng).unwrap();
         password.push_str(word);
         if i < word_count - 1 {
-            password.push_str(" ");
-            // password.push_str("-");
+            password.push_str("-");
+            password.push_str(&generate_random_digits());
+            password.push_str("-");
+            // password.push_str(" ");
         } else {
             password.push_str("#");
             // password.push_str("!");
@@ -45,4 +47,10 @@ fn generate_password(word_list: &[String], word_count: usize) -> String {
     }
 
     password
+}
+
+fn generate_random_digits() -> String {
+    let mut rng = thread_rng();
+    let digits: Vec<u8> = (0..2).map(|_| rng.gen_range(0..=9)).collect();
+    digits.iter().map(|digit| digit.to_string()).collect()
 }
